@@ -11,3 +11,5 @@ summary(data)
 #deneme esin
 
 ## denem uygar 2
+
+##denemeesin 2
