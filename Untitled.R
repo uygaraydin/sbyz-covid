@@ -9,3 +9,5 @@ summary(data)
 
 
 #deneme esin
+
+## denem uygar 2
