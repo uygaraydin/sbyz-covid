@@ -6,3 +6,6 @@ summary(data)
 
 ##deneme 2
 
+
+
+#deneme esin
