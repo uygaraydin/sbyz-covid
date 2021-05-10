@@ -17,3 +17,6 @@ summary(data)
 
 ## denem uygar 3
 
+#Deneme 4 Nada
+
+## verisetimiz cok buyuk yukleyemedim -_-
