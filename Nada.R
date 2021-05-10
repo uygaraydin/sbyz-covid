@@ -10,7 +10,7 @@ data1<- data1[data1$age_60_and_above!="",]
 data1<- data1[data1$gender!="",]
 
 
-
+#Categorizing
 data1$cough <- as.factor(data1$cough)
 data1$fever <- as.factor(data1$fever)
 data1$sore_throat <- as.factor(data1$sore_throat)
@@ -24,3 +24,7 @@ data1$test_date <- as.Date(data1$test_date)
 
 summary(data1)
 nu1<-nrow(unique(data1))
+
+#removing duplicates
+uni_data <- data1[!duplicated(data1),]
+
