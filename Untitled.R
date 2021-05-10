@@ -12,4 +12,8 @@ summary(data)
 
 ## denem uygar 2
 
+
 ##denemeesin 2
+
+## denem uygar 3
+
