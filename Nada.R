@@ -8,7 +8,7 @@ summary(data)
 data1<- data[data$corona_result!="other",] 
 data1<- data1[data1$age_60_and_above!="",]
 data1<- data1[data1$gender!="",]
-
+#test 
 
 #Categorizing
 data1$cough <- as.factor(data1$cough)
