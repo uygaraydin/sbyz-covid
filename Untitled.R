@@ -19,4 +19,4 @@ summary(data)
 
 #Deneme 4 Nada
 
-## verisetimiz cok buyuk yukleyemedim -_- Nada
+## verisetimiz cok buyuk yukleyemedim -_- Nadaaaaaa
