@@ -19,4 +19,8 @@ summary(data)
 
 #Deneme 4 Nada
 
+
 ## verisetimiz cok buyuk yukleyemedim -_- Nadaaaaaa
+
+## verisetimiz cok buyuk yukleyemedim -_- uygar gfgf
+
