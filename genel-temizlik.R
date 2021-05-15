@@ -35,3 +35,5 @@ dataFile$test_date = as.Date(dataFile$test_date)
 
 dataFile = filter(dataFile, !(cough == 0 & fever == 0 & sore_throat == 0 & shortness_of_breath == 0 & head_ache == 0 & corona_result == "negative"))
 summary(dataFile)
+#temizlenmis veri setin bilgisayardaki proje klasorune eklendi
+write.csv(dataFile, "temizlenmis-veri-seti.csv", row.names = TRUE)
