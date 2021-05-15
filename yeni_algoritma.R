@@ -1,3 +1,0 @@
-yazmıycam
-
-ben yazdım
