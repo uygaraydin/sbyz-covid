@@ -2,3 +2,5 @@ cleanedDataFile = read.csv(file = "./veri-on-isleme/temizlenmis-veri-seti.csv", 
 summary(cleanedDataFile)
 ##deneme fadime
 ##deneme emrah
+##deneme uygar
+
