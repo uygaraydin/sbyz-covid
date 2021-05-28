@@ -24,10 +24,7 @@ nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,])
 
 write.csv(cleanedDataFile, "temizlenmis-knn_ile_doldurulmus_dengesiz.csv", row.names = TRUE)
 
-
-
-
-#Over sampling
+#OverSampling
 library(ROSE) 
 
 over_norws <-nrow(cleanedDataFile[cleanedDataFile$corona_result=="positive",])*2
