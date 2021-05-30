@@ -27,23 +27,40 @@ tail(cleanedDataFile)
 summary(cleanedDataFile)
 cleanedDataFile = filter(cleanedDataFile, age_60_and_above != "NA")
 cleanedDataFile = filter(cleanedDataFile, gender != "NA")
-
+cleanedDataFile<-cleanedDataFile[,-1]
 nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,]) 
-write.csv(cleanedDataFile, "ekstra-temizlenmis-veri-seti.csv", row.names = TRUE)
+#write.csv(cleanedDataFile, "ekstra-temizlenmis-veri-seti.csv", row.names = TRUE)
+
+
+#Hold Out
+
+library(caret) 
+set.seed(10) 
+egitimIndisleri <- createDataPartition(y = cleanedDataFile$Class, p = .70, list = FALSE)  
+
+EgitimDengesiz <- cleanedDataFile[egitimIndisleri,] 
+TestDengesiz <- cleanedDataFile[-egitimIndisleri,] 
+table(EgitimDengesiz$corona_result)
+table(TestDengesiz$corona_result)
+
+
+
+write.csv(EgitimDengesiz, "eksikleri_silindi_egitim_dengesiz.csv")
+write.csv(TestDengesiz, "eksikleri_silindi_test.csv")
+
+
 
 ### OverSampling
 ################
 
+
+
 library(ROSE) 
-over_norws <-nrow(cleanedDataFile[cleanedDataFile$corona_result=="positive",])*2
-DengliData <- cleanedDataFile
-DengliData<-DengliData[,-1]
-DengliData <- ovun.sample(corona_result ~ ., data = DengliData, method="over",N=over_norws)$data
+over_norws <-nrow(EgitimDengesiz[EgitimDengesiz$corona_result=="positive",])*2
+EgitimDengli <- EgitimDengesiz
+EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over",N=over_norws)$data
 
-summary(DengliData)
-str(DengliData)
-table(DengliData$corona_result)
-
-head(DengliData)
-head(cleanedDataFile)
-write.csv(DengliData, "ekstra-temizlenmis-dengeli-veri.csv", row.names = TRUE)
+summary(EgitimDengli)
+str(EgitimDengli)
+table(EgitimDengli$corona_result)
+write.csv(DengliData, "eksikleri_silindi_egitim_dengeli.csv")

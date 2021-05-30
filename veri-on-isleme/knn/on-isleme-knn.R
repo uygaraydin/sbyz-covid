@@ -4,41 +4,55 @@ library(googledrive)
 library(dplyr)
 drive_deauth()
 temp = tempfile(fileext = ".csv")
-fileFromDrive = drive_download(as_id("1GKcJ1sVfPN3QabDDvVs7fGHKUm1MOmP2"), path = temp, overwrite = TRUE)
-
+fileFromDrive = drive_download(as_id("1gf3_b_1qxT46GegUEKjnAerKNdgBDRim"), path = temp, overwrite = TRUE)
 cleanedDataFile = read.csv(temp,header = T, sep = ",", dec = ".", stringsAsFactors = T)
 summary(cleanedDataFile)
 
+cleanedDataFile<-cleanedDataFile[,-1]
 
-ek <- c(319946,0,0,0,0,0,"negative",NA,NA,"Abroad")
+ek <- c(0,0,0,0,0,"negative",NA,NA,"Abroad")
 cleanedDataFile <-rbind(cleanedDataFile,ek)
 tail(cleanedDataFile)
 
 # Eksikleri knn kullanarak doldurmak:
 #install.packages("DMwR2") 
 library(DMwR2) 
-cleanedDataFile <- knnImputation(cleanedDataFile, k=5) 
+cleanedDataFile <- knnImputation(cleanedDataFile, k=3) 
 summary(cleanedDataFile)
 
 nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,]) 
+VS <- cleanedDataFile[!duplicated(cleanedDataFile),] 
 
-write.csv(cleanedDataFile, "temizlenmis-knn_ile_doldurulmus_dengesiz.csv", row.names = TRUE)
+
+# install.packages("caret") 
+library(caret) 
+set.seed(10) 
+egitimIndisleri <- createDataPartition(y = cleanedDataFile$corona_result, p = .70, list = FALSE)  
+
+EgitimDengesiz <- cleanedDataFile[egitimIndisleri,] 
+TestDengesiz <- cleanedDataFile[-egitimIndisleri,] 
+table(EgitimDengesiz$corona_result)
+table(TestDengesiz$corona_result)
+
+
+
+write.csv(EgitimDengesiz, "knn_doldurulmus_egitim_dengesiz.csv")
+write.csv(TestDengesiz, "knn_doldurulmus_test.csv")
 
 #OverSampling
 library(ROSE) 
 
-over_norws <-nrow(cleanedDataFile[cleanedDataFile$corona_result=="positive",])*2
-DengliData <- cleanedDataFile
-DengliData<-DengliData[,-1]
 
-DengliData <- ovun.sample(corona_result ~ ., data = DengliData, method="over",N=over_norws)$data
+over_norws <-nrow(EgitimDengesiz[EgitimDengesiz$corona_result=="positive",])*2
+EgitimDengli <- EgitimDengesiz
+
+EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over",N=over_norws)$data
 
 
-summary(DengliData)
-str(DengliData)
+summary(EgitimDengli)
+str(EgitimDengli)
 
-table(DengliData$corona_result)
+table(EgitimDengli$corona_result)
 
-head(DengliData)
-head(cleanedDataFile)
-write.csv(DengliData, "temizlenmis-knn_ile_doldurulmus_dengeli.csv", row.names = TRUE)
+head(EgitimDengli)
+write.csv(EgitimDengli, "knn_doldurulmus_egitim_dengeli.csv")
