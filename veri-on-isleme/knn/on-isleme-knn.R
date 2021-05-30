@@ -36,8 +36,9 @@ EgitimDengesiz <- cleanedDataFile[egitimIndisleri,]
 TestDengesiz <- cleanedDataFile[-egitimIndisleri,] 
 table(EgitimDengesiz$corona_result)
 table(TestDengesiz$corona_result)
-
-
+nrow(EgitimDengesiz)
+nrow(unique(EgitimDengesiz))
+nrow(unique(TestDengesiz))
 
 write.csv(EgitimDengesiz, "knn_doldurulmus_egitim_dengesiz.csv")
 write.csv(TestDengesiz, "knn_doldurulmus_test.csv")
