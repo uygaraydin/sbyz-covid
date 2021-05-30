@@ -36,7 +36,7 @@ nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,])
 
 library(caret) 
 set.seed(10) 
-egitimIndisleri <- createDataPartition(y = cleanedDataFile$Class, p = .70, list = FALSE)  
+egitimIndisleri <- createDataPartition(y = cleanedDataFile$corona_result, p = .70, list = FALSE)  
 
 EgitimDengesiz <- cleanedDataFile[egitimIndisleri,] 
 TestDengesiz <- cleanedDataFile[-egitimIndisleri,] 
@@ -45,9 +45,9 @@ table(TestDengesiz$corona_result)
 
 
 
+
 write.csv(EgitimDengesiz, "eksikleri_silindi_egitim_dengesiz.csv")
 write.csv(TestDengesiz, "eksikleri_silindi_test.csv")
-
 
 
 ### OverSampling
@@ -63,4 +63,4 @@ EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over
 summary(EgitimDengli)
 str(EgitimDengli)
 table(EgitimDengli$corona_result)
-write.csv(DengliData, "eksikleri_silindi_egitim_dengeli.csv")
+write.csv(EgitimDengli, "eksikleri_silindi_egitim_dengeli.csv")

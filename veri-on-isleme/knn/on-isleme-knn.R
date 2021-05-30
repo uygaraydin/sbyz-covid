@@ -21,12 +21,15 @@ cleanedDataFile <- knnImputation(cleanedDataFile, k=3)
 summary(cleanedDataFile)
 
 nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,]) 
-VS <- cleanedDataFile[!duplicated(cleanedDataFile),] 
+
+#cleanedDataFile<-cleanedDataFile[,-1]
+
 
 
 # install.packages("caret") 
 library(caret) 
 set.seed(10) 
+
 egitimIndisleri <- createDataPartition(y = cleanedDataFile$corona_result, p = .70, list = FALSE)  
 
 EgitimDengesiz <- cleanedDataFile[egitimIndisleri,] 
@@ -55,4 +58,5 @@ str(EgitimDengli)
 table(EgitimDengli$corona_result)
 
 head(EgitimDengli)
+
 write.csv(EgitimDengli, "knn_doldurulmus_egitim_dengeli.csv")
