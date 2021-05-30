@@ -8,7 +8,7 @@ library(googledrive)
 library(dplyr)
 drive_deauth()
 temp = tempfile(fileext = ".csv")
-fileFromDrive = drive_download(as_id("1GKcJ1sVfPN3QabDDvVs7fGHKUm1MOmP2"), path = temp, overwrite = TRUE)
+fileFromDrive = drive_download(as_id("1gf3_b_1qxT46GegUEKjnAerKNdgBDRim"), path = temp, overwrite = TRUE)
 
 cleanedDataFile = read.csv(temp,header = T, sep = ",", dec = ".", stringsAsFactors = T)
 summary(cleanedDataFile)
@@ -36,7 +36,7 @@ nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,])
 
 library(caret) 
 set.seed(10) 
-egitimIndisleri <- createDataPartition(y = cleanedDataFile$Class, p = .70, list = FALSE)  
+egitimIndisleri <- createDataPartition(y = cleanedDataFile$corona_result, p = .70, list = FALSE)  
 
 EgitimDengesiz <- cleanedDataFile[egitimIndisleri,] 
 TestDengesiz <- cleanedDataFile[-egitimIndisleri,] 
@@ -45,9 +45,9 @@ table(TestDengesiz$corona_result)
 
 
 
+
 write.csv(EgitimDengesiz, "eksikleri_silindi_egitim_dengesiz.csv")
 write.csv(TestDengesiz, "eksikleri_silindi_test.csv")
-
 
 
 ### OverSampling
@@ -63,4 +63,4 @@ EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over
 summary(EgitimDengli)
 str(EgitimDengli)
 table(EgitimDengli$corona_result)
-write.csv(DengliData, "eksikleri_silindi_egitim_dengeli.csv")
+write.csv(EgitimDengli, "eksikleri_silindi_egitim_dengeli.csv")
