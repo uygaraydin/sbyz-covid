@@ -13,8 +13,12 @@ fileFromDrive = drive_download(as_id("1GKcJ1sVfPN3QabDDvVs7fGHKUm1MOmP2"), path 
 cleanedDataFile = read.csv(temp,header = T, sep = ",", dec = ".", stringsAsFactors = T)
 summary(cleanedDataFile)
 
-ek <- c(319946,0,0,0,0,0,"negative",NA,NA,"Abroad")
-cleanedDataFile <-rbind(cleanedDataFile,ek)
+ek <- c(319946,0,0,0,0,0,"negative","Yes","female","Abroad")
+ek1 <- c(319947,0,0,0,0,0,"negative","Yes","male","Abroad")
+ek2 <- c(319948,0,0,0,0,0,"negative","No","female","Abroad")
+ek3 <- c(319949,0,0,0,0,0,"negative","No","male","Abroad")
+
+cleanedDataFile <-rbind(cleanedDataFile,ek,ek1,ek2,ek3)
 tail(cleanedDataFile)
 
 ### Eksiklerin silinmesi
