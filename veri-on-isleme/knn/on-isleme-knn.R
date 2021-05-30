@@ -17,7 +17,7 @@ tail(cleanedDataFile)
 # Eksikleri knn kullanarak doldurmak:
 #install.packages("DMwR2") 
 library(DMwR2) 
-cleanedDataFile <- knnImputation(cleanedDataFile, k=3) 
+cleanedDataFile <- knnImputation(cleanedDataFile, k=10) 
 summary(cleanedDataFile)
 
 nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,]) 
@@ -37,8 +37,6 @@ TestDengesiz <- cleanedDataFile[-egitimIndisleri,]
 table(EgitimDengesiz$corona_result)
 table(TestDengesiz$corona_result)
 nrow(EgitimDengesiz)
-nrow(unique(EgitimDengesiz))
-nrow(unique(TestDengesiz))
 
 write.csv(EgitimDengesiz, "knn_doldurulmus_egitim_dengesiz.csv")
 write.csv(TestDengesiz, "knn_doldurulmus_test.csv")
@@ -54,7 +52,6 @@ EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over
 
 
 summary(EgitimDengli)
-str(EgitimDengli)
 
 table(EgitimDengli$corona_result)
 
