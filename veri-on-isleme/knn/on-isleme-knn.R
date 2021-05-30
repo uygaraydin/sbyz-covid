@@ -47,9 +47,7 @@ library(ROSE)
 
 over_norws <-nrow(EgitimDengesiz[EgitimDengesiz$corona_result=="positive",])*2
 EgitimDengli <- EgitimDengesiz
-
 EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over",N=over_norws)$data
-
 
 summary(EgitimDengli)
 
