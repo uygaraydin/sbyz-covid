@@ -1,25 +1,26 @@
 #install.packages("googledrive")
 #install.packages("dplyr")
-library(googledrive)
-library(dplyr)
-drive_deauth()
-temp = tempfile(fileext = ".csv")
-fileFromDrive = drive_download(as_id("1gf3_b_1qxT46GegUEKjnAerKNdgBDRim"), path = temp, overwrite = TRUE)
-cleanedDataFile = read.csv(temp,header = T, sep = ",", dec = ".", stringsAsFactors = T)
-summary(cleanedDataFile)
+# library(googledrive)
+# library(dplyr)
+# drive_deauth()
+# temp = tempfile(fileext = ".csv")
+# fileFromDrive = drive_download(as_id("1gf3_b_1qxT46GegUEKjnAerKNdgBDRim"), path = temp, overwrite = TRUE)
+# cleanedDataFile = read.csv(temp,header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# summary(cleanedDataFile)
 
+cleanedDataFile = read.csv(file = "./veri-on-isleme/temizlenmis-veri-seti-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 cleanedDataFile<-cleanedDataFile[,-1]
 
-ek <- c(0,0,0,0,0,"negative",NA,NA,"Abroad")
-cleanedDataFile <-rbind(cleanedDataFile,ek)
-tail(cleanedDataFile)
+# ek <- c(0,0,0,0,0,"negative",NA,NA,"Abroad")
+# cleanedDataFile <-rbind(cleanedDataFile,ek)
+# tail(cleanedDataFile)
 
 # Eksikleri knn kullanarak doldurmak:
 #install.packages("DMwR2") 
 library(DMwR2) 
-cleanedDataFile <- knnImputation(cleanedDataFile, k=10) 
-summary(cleanedDataFile)
 
+cleanedDataFile <- knnImputation(cleanedDataFile, k=2)
+summary(cleanedDataFile)
 nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,]) 
 
 #cleanedDataFile<-cleanedDataFile[,-1]
@@ -38,8 +39,8 @@ table(EgitimDengesiz$corona_result)
 table(TestDengesiz$corona_result)
 nrow(EgitimDengesiz)
 
-write.csv(EgitimDengesiz, "knn_doldurulmus_egitim_dengesiz.csv")
-write.csv(TestDengesiz, "knn_doldurulmus_test.csv")
+write.csv(EgitimDengesiz, "./veri-on-isleme/knn/knn_doldurulmus_egitim_dengesiz.csv")
+write.csv(TestDengesiz, "./veri-on-isleme/knn/knn_doldurulmus_test.csv")
 
 #OverSampling
 library(ROSE) 

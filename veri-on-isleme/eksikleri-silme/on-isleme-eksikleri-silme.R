@@ -16,8 +16,20 @@
 # summary(cleanedDataFile)
 ########
 
-cleanedDataFile = read.csv(file = "./temizlenmis-veri-seti-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+cleanedDataFile = read.csv(file = "./veri-on-isleme/temizlenmis-veri-seti-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 cleanedDataFile<-cleanedDataFile[,-1]
+cleanedDataFile = na.omit(cleanedDataFile)
+
+cleanedDataFile$corona_result = as.factor(cleanedDataFile$corona_result)
+cleanedDataFile$age_60_and_above = as.factor(cleanedDataFile$age_60_and_above)
+cleanedDataFile$gender = as.factor(cleanedDataFile$gender)
+cleanedDataFile$test_indication = as.factor(cleanedDataFile$test_indication)
+cleanedDataFile$cough = as.factor(cleanedDataFile$cough)
+cleanedDataFile$fever = as.factor(cleanedDataFile$fever)
+cleanedDataFile$sore_throat = as.factor(cleanedDataFile$sore_throat)
+cleanedDataFile$shortness_of_breath = as.factor(cleanedDataFile$shortness_of_breath)
+cleanedDataFile$head_ache = as.factor(cleanedDataFile$head_ache)
+cleanedDataFile$corona_result = as.factor(cleanedDataFile$corona_result)
 
 # ek <- c(0,0,0,0,0,"negative","Yes","female","Abroad")
 # ek1 <- c(0,0,0,0,0,"negative","Yes","male","Abroad")

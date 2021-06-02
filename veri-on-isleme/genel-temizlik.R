@@ -18,7 +18,7 @@ dataFile$age_60_and_above[dataFile$age_60_and_above==""] = NA
 dataFile$gender[dataFile$gender==""] = NA
 # dataFile = dataFile[which(rowMeans(!is.na(dataFile)) > 0.7), ]
 
-dataFile = na.omit(dataFile)
+
 
 dataFile$corona_result = as.factor(dataFile$corona_result)
 dataFile$age_60_and_above = as.factor(dataFile$age_60_and_above)
@@ -39,4 +39,4 @@ summary(dataFile)
 #dataFile = filter(dataFile, !(cough == 0 & fever == 0 & sore_throat == 0 & shortness_of_breath == 0 & head_ache == 0 & corona_result == "negative"))
 summary(dataFile)
 #temizlenmis veri setin bilgisayardaki proje klasorune eklendi
-write.csv(dataFile, "temizlenmis-veri-seti-emrah.csv", row.names = TRUE)
+write.csv(dataFile, "./veri-on-isleme/temizlenmis-veri-seti-emrah.csv", row.names = TRUE)
