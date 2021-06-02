@@ -12,11 +12,11 @@ dataFile$test_date = NULL
 
 #dataFile = filter(dataFile, corona_result != "other", age_60_and_above != "", gender != "")
 
-## %30'undan fazlası NA ise rowları sil
+
 dataFile = filter(dataFile, corona_result != "other")
 dataFile$age_60_and_above[dataFile$age_60_and_above==""] = NA
 dataFile$gender[dataFile$gender==""] = NA
-dataFile = dataFile[which(rowMeans(!is.na(dataFile)) > 0.7), ]
+# dataFile = dataFile[which(rowMeans(!is.na(dataFile)) > 0.7), ]
 
 dataFile = na.omit(dataFile)
 

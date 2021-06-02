@@ -4,79 +4,93 @@ library(doParallel)
 cl <- makeCluster(detectCores())
 registerDoParallel(cl)
 
-# cleanedDataFile = read.csv(file = "./veri-on-isleme/temizlenmis-veri-seti.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-# cleanedDataFile$X = NULL
-# dataClean = cleanedDataFile
+train = read.csv(file = "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_egitim_dengesiz-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+test = read.csv(file = "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_test-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+train$X = NULL
+test$X = NULL
+dataClean = cleanedDataFile
 
-library(googledrive)
-library(dplyr)
-drive_deauth()
-temp = tempfile(fileext = ".csv")
-fileFromDrive = drive_download(as_id("1dua9DvoXqNuKadhZ6K_rOEmLOqBbZ3L1"), path = temp, overwrite = TRUE)
-dataFile = read.csv(temp)
-dataFile$test_date = NULL
+# library(googledrive)
+# library(dplyr)
+# drive_deauth()
+# temp = tempfile(fileext = ".csv")
+# fileFromDrive = drive_download(as_id("1dua9DvoXqNuKadhZ6K_rOEmLOqBbZ3L1"), path = temp, overwrite = TRUE)
+# dataFile = read.csv(temp)
+# dataFile$test_date = NULL
 # data = dataFile[!duplicated(dataFile), ]
-dataClean = dataFile
-data = dataClean[!duplicated(dataClean), ]
 
-data$corona_result = as.factor(data$corona_result)
-data$cough = as.factor(data$cough)
-data$fever = as.factor(data$fever)
-data$sore_throat = as.factor(data$sore_throat)
-data$shortness_of_breath = as.factor(data$shortness_of_breath)
-data$head_ache = as.factor(data$head_ache)
-data$corona_result = as.factor(data$corona_result)
-data$age_60_and_above = as.factor(data$age_60_and_above)
-data$gender = as.factor(data$gender)
-data$test_indication = as.factor(data$test_indication)
 
-dataClean$corona_result = as.factor(dataClean$corona_result)
-dataClean$cough = as.factor(dataClean$cough)
-dataClean$fever = as.factor(dataClean$fever)
-dataClean$sore_throat = as.factor(dataClean$sore_throat)
-dataClean$shortness_of_breath = as.factor(dataClean$shortness_of_breath)
-dataClean$head_ache = as.factor(dataClean$head_ache)
-dataClean$corona_result = as.factor(dataClean$corona_result)
-dataClean$age_60_and_above = as.factor(dataClean$age_60_and_above)
-dataClean$gender = as.factor(dataClean$gender)
-dataClean$test_indication = as.factor(dataClean$test_indication)
+train$corona_result = as.factor(train$corona_result)
+train$cough = as.factor(train$cough)
+train$fever = as.factor(train$fever)
+train$sore_throat = as.factor(train$sore_throat)
+train$shortness_of_breath = as.factor(train$shortness_of_breath)
+train$head_ache = as.factor(train$head_ache)
+train$corona_result = as.factor(train$corona_result)
+train$age_60_and_above = as.factor(train$age_60_and_above)
+train$gender = as.factor(train$gender)
+train$test_indication = as.factor(train$test_indication)
+train$corona_result = as.factor(train$corona_result)
 
-dataClean$gender = NULL
-dataClean$age_60_and_above = NULL
-dataClean$test_indication = NULL
-summary(dataClean)
+test$cough = as.factor(test$cough)
+test$fever = as.factor(test$fever)
+test$sore_throat = as.factor(test$sore_throat)
+test$shortness_of_breath = as.factor(test$shortness_of_breath)
+test$head_ache = as.factor(test$head_ache)
+test$corona_result = as.factor(test$corona_result)
+test$age_60_and_above = as.factor(test$age_60_and_above)
+test$gender = as.factor(test$gender)
+test$test_indication = as.factor(test$test_indication)
 
-data$gender = NULL
-data$age_60_and_above = NULL
-data$test_indication = NULL
-
-summary(data)
-summary(dataClean)
+summary(train)
+summary(test)
 
 # library(caret)
 # set.seed(1)
 # trainIndex=createDataPartition(data$corona_result, p=0.7, list = FALSE)
 # train=data[trainIndex, ]
 # test=data[-trainIndex, ]
-# 
-# print(table(data$corona_result))
-# print(table(train$corona_result))
+
+print(table(test$corona_result))
+print(table(train$corona_result))
+
+
+copyDataForCorrelation = rbind(train, test)
+
+copyDataForCorrelation$cough = as.numeric(copyDataForCorrelation$cough)
+copyDataForCorrelation$fever = as.numeric(copyDataForCorrelation$fever)
+copyDataForCorrelation$shortness_of_breath = as.numeric(copyDataForCorrelation$shortness_of_breath)
+copyDataForCorrelation$age_60_and_above = as.numeric(copyDataForCorrelation$age_60_and_above)
+copyDataForCorrelation$gender = as.numeric(copyDataForCorrelation$gender)
+copyDataForCorrelation$sore_throat = as.numeric(copyDataForCorrelation$sore_throat)
+copyDataForCorrelation$head_ache = as.numeric(copyDataForCorrelation$head_ache)
+copyDataForCorrelation$test_indication = as.numeric(copyDataForCorrelation$test_indication)
+copyDataForCorrelation$corona_result = NULL
+
+
+correlationMatrix = cor(copyDataForCorrelation)
+correlationMatrix
+#install.packages("corrplot")
+library(corrplot)
+#korelansyon matrisi gorsellestirildi.
+corrplot(correlationMatrix)
+###korelasyon bolumu bitisi
 
 
 library(e1071)
-NBclassfier=naiveBayes(corona_result~cough+fever+sore_throat+shortness_of_breath+head_ache, data=data, laplace = 0)
+NBclassfier=naiveBayes(corona_result~cough+fever+sore_throat+shortness_of_breath+head_ache+test_indication+age_60_and_above+gender, data=train, laplace = 0)
 print(NBclassfier)
 
 
 
 library(gmodels)
-testPred=predict(NBclassfier, newdata=dataClean, type="class")
+testPred=predict(NBclassfier, newdata=test, type="class")
 message("Test Datasinin Matrisi")
-CrossTable(testPred, dataClean$corona_result, prop.chisq = FALSE, chisq = FALSE, 
+CrossTable(testPred, test$corona_result, prop.chisq = FALSE, chisq = FALSE, 
            prop.t = FALSE,
            dnn = c("Predicted", "Actual"))
 
-confusionMatrix(data = testPred, reference = dataClean$corona_result, mode = "everything", positive = "positive")
+confusionMatrix(data = testPred, reference = test$corona_result, mode = "everything", positive = "positive")
 
 
 

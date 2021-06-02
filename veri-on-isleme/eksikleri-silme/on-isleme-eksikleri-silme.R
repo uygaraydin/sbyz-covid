@@ -4,32 +4,37 @@
 
 #install.packages("googledrive")
 #install.packages("dplyr")
-library(googledrive)
-library(dplyr)
-drive_deauth()
-temp = tempfile(fileext = ".csv")
-fileFromDrive = drive_download(as_id("1gf3_b_1qxT46GegUEKjnAerKNdgBDRim"), path = temp, overwrite = TRUE)
 
-cleanedDataFile = read.csv(temp,header = T, sep = ",", dec = ".", stringsAsFactors = T)
-summary(cleanedDataFile)
+########
+# library(googledrive)
+# library(dplyr)
+# drive_deauth()
+# temp = tempfile(fileext = ".csv")
+# fileFromDrive = drive_download(as_id("1gf3_b_1qxT46GegUEKjnAerKNdgBDRim"), path = temp, overwrite = TRUE)
+# 
+# cleanedDataFile = read.csv(temp,header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# summary(cleanedDataFile)
+########
+
+cleanedDataFile = read.csv(file = "./temizlenmis-veri-seti-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 cleanedDataFile<-cleanedDataFile[,-1]
 
-ek <- c(0,0,0,0,0,"negative","Yes","female","Abroad")
-ek1 <- c(0,0,0,0,0,"negative","Yes","male","Abroad")
-ek2 <- c(0,0,0,0,0,"negative","No","female","Abroad")
-ek3 <- c(0,0,0,0,0,"negative","No","male","Abroad")
+# ek <- c(0,0,0,0,0,"negative","Yes","female","Abroad")
+# ek1 <- c(0,0,0,0,0,"negative","Yes","male","Abroad")
+# ek2 <- c(0,0,0,0,0,"negative","No","female","Abroad")
+# ek3 <- c(0,0,0,0,0,"negative","No","male","Abroad")
 
-cleanedDataFile <-rbind(cleanedDataFile,ek,ek1,ek2,ek3)
-tail(cleanedDataFile)
+# cleanedDataFile <-rbind(cleanedDataFile,ek,ek1,ek2,ek3)
+# tail(cleanedDataFile)
 
 ### Eksiklerin silinmesi
 ########################
 
 summary(cleanedDataFile)
-cleanedDataFile = filter(cleanedDataFile, age_60_and_above != "NA")
-cleanedDataFile = filter(cleanedDataFile, gender != "NA")
-cleanedDataFile<-cleanedDataFile[,-1]
-nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,]) 
+# cleanedDataFile = filter(cleanedDataFile, age_60_and_above != "NA")
+# cleanedDataFile = filter(cleanedDataFile, gender != "NA")
+# cleanedDataFile<-cleanedDataFile[,-1]
+# nrow(cleanedDataFile[duplicated(cleanedDataFile)==TRUE,]) 
 #write.csv(cleanedDataFile, "ekstra-temizlenmis-veri-seti.csv", row.names = TRUE)
 
 
@@ -47,8 +52,8 @@ table(TestDengesiz$corona_result)
 
 
 
-write.csv(EgitimDengesiz, "eksikleri_silindi_egitim_dengesiz.csv")
-write.csv(TestDengesiz, "eksikleri_silindi_test.csv")
+write.csv(EgitimDengesiz, "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_egitim_dengesiz-emrah.csv")
+write.csv(TestDengesiz, "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_test-emrah.csv")
 
 
 ### OverSampling
@@ -56,12 +61,12 @@ write.csv(TestDengesiz, "eksikleri_silindi_test.csv")
 
 
 
-library(ROSE) 
-over_norws <-nrow(EgitimDengesiz[EgitimDengesiz$corona_result=="positive",])*2
-EgitimDengli <- EgitimDengesiz
-EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over",N=over_norws)$data
-
-summary(EgitimDengli)
-str(EgitimDengli)
-table(EgitimDengli$corona_result)
-write.csv(EgitimDengli, "eksikleri_silindi_egitim_dengeli.csv")
+# library(ROSE) 
+# over_norws <-nrow(EgitimDengesiz[EgitimDengesiz$corona_result=="positive",])*2
+# EgitimDengli <- EgitimDengesiz
+# EgitimDengli <- ovun.sample(corona_result ~ ., data = EgitimDengli, method="over",N=over_norws)$data
+# 
+# summary(EgitimDengli)
+# str(EgitimDengli)
+# table(EgitimDengli$corona_result)
+# write.csv(EgitimDengli, "eksikleri_silindi_egitim_dengeli.csv")
