@@ -16,11 +16,11 @@
 # summary(cleanedDataFile)
 ########
 
-cleanedDataFile = read.csv(file = "./veri-on-isleme/temizlenmis-veri-seti-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+cleanedDataFile = read.csv(file = "./veri-on-isleme/genel-temizlik.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 cleanedDataFile<-cleanedDataFile[,-1]
 cleanedDataFile = na.omit(cleanedDataFile)
+summary(cleanedDataFile)
 
-cleanedDataFile$corona_result = as.factor(cleanedDataFile$corona_result)
 cleanedDataFile$age_60_and_above = as.factor(cleanedDataFile$age_60_and_above)
 cleanedDataFile$gender = as.factor(cleanedDataFile$gender)
 cleanedDataFile$test_indication = as.factor(cleanedDataFile$test_indication)
@@ -30,6 +30,13 @@ cleanedDataFile$sore_throat = as.factor(cleanedDataFile$sore_throat)
 cleanedDataFile$shortness_of_breath = as.factor(cleanedDataFile$shortness_of_breath)
 cleanedDataFile$head_ache = as.factor(cleanedDataFile$head_ache)
 cleanedDataFile$corona_result = as.factor(cleanedDataFile$corona_result)
+
+summary(cleanedDataFile)
+set.seed(1) 
+samp = sample(which(cleanedDataFile$corona_result=="negative"), size = 1734446)
+cleanedDataFile = cleanedDataFile[-samp, ]
+summary(cleanedDataFile)
+
 
 # ek <- c(0,0,0,0,0,"negative","Yes","female","Abroad")
 # ek1 <- c(0,0,0,0,0,"negative","Yes","male","Abroad")
@@ -42,7 +49,6 @@ cleanedDataFile$corona_result = as.factor(cleanedDataFile$corona_result)
 ### Eksiklerin silinmesi
 ########################
 
-summary(cleanedDataFile)
 # cleanedDataFile = filter(cleanedDataFile, age_60_and_above != "NA")
 # cleanedDataFile = filter(cleanedDataFile, gender != "NA")
 # cleanedDataFile<-cleanedDataFile[,-1]
@@ -56,16 +62,14 @@ library(caret)
 set.seed(10) 
 egitimIndisleri <- createDataPartition(y = cleanedDataFile$corona_result, p = .70, list = FALSE)  
 
-EgitimDengesiz <- cleanedDataFile[egitimIndisleri,] 
-TestDengesiz <- cleanedDataFile[-egitimIndisleri,] 
-table(EgitimDengesiz$corona_result)
-table(TestDengesiz$corona_result)
+dengeliEgitim <- cleanedDataFile[egitimIndisleri,] 
+dengeliTest <- cleanedDataFile[-egitimIndisleri,] 
+table(dengeliEgitim$corona_result)
+table(dengeliTest$corona_result)
 
 
-
-
-write.csv(EgitimDengesiz, "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_egitim_dengesiz-emrah.csv")
-write.csv(TestDengesiz, "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_test-emrah.csv")
+write.csv(dengeliEgitim, "./veri-on-isleme/1-2_na-silme/random_dengeleme_egitim.csv")
+write.csv(dengeliTest, "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv")
 
 
 ### OverSampling
