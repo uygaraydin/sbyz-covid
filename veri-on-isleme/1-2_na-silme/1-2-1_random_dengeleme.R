@@ -31,9 +31,13 @@ cleanedDataFile$shortness_of_breath = as.factor(cleanedDataFile$shortness_of_bre
 cleanedDataFile$head_ache = as.factor(cleanedDataFile$head_ache)
 cleanedDataFile$corona_result = as.factor(cleanedDataFile$corona_result)
 
+l1= as.data.frame(cleanedDataFile$corona_result[cleanedDataFile$corona_result=="negative"])
+l2=as.data.frame(cleanedDataFile$corona_result[cleanedDataFile$corona_result=="positive"])
+fark=nrow(l1)-nrow(l2)
+
 summary(cleanedDataFile)
 set.seed(1) 
-samp = sample(which(cleanedDataFile$corona_result=="negative"), size = 1734446)
+samp = sample(which(cleanedDataFile$corona_result=="negative"), size = fark)
 cleanedDataFile = cleanedDataFile[-samp, ]
 summary(cleanedDataFile)
 
