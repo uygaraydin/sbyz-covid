@@ -22,32 +22,43 @@ test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv"
 train$X = NULL
 test$X = NULL
 
-# Dengeli SVM Model
+#install.packages("parallelSVM")
+#install.packages("doSNOW")
+
 library(e1071)
-dengeli_SVM <- svm(corona_result~.,data = train)
+library(parallelSVM)
+library(parallel)
+library(doSNOW)
+library(foreach)
+library(caret)
 
-SVM_tahminleri <- predict(dengeli_SVM, test[,1:8])
-(SVM_tablom <- table(SVM_tahminleri, test[[9]], dnn = c("Tahmini Siniflar", "Gercek Siniflar")))
+numOfCores <- detectCores() - 6
 
-matSVM_dengeli<-confusionMatrix(data = SVM_tahminleri, reference = test[[9]], mode = "everything" )
-matSVM_dengeli
+set.seed(1) 
+# samp = sample(nrow(train), 290000)
+# trainSamp = train[-samp, ]
+system.time(svmModel = parallelSVM(corona_result~.,data = train, coresNumber = numOfCores))
+svm_predictions = predict(svmModel, test)
 
-# Dengesiz SVM Model
-library(e1071)
-dengesiz_SVM <- svm(corona_result~.,data = train)
 
-SVM_tahminleri <- predict(dengesiz_SVM, test[,1:8])
-(SVM_tablom <- table(SVM_tahminleri, test[[9]], dnn = c("Tahmini Siniflar", "Gercek Siniflar")))
 
-matSVM_dengesiz<-confusionMatrix(data = SVM_tahminleri, reference = test[[9]], mode = "everything" )
-matSVM_dengesiz
+# cl=makeCluster(numOfCores)
+# registerDoSNOW(cl)
+# num_splits = 4
+# split_testing = sort(rank(1:nrow(test))%%4)
+# unique(split_testing)
+# predictions = foreach(i=0,.combine=c,.packages=c("e1071")) %dopar% {
+#                         as.numeric(predict(svmModel,.GlobalEnv$test))
+#   
+# }
+# print(predictions)
+# stopCluster(cl)
+# 
+# start=proc.time()
+# # predictions=parallel_predictions(svmModel,test)
+# print(predictions)
+# dopar_loop=proc.time()-start
 
-# Unique SVM Model
-library(e1071)
-unique_SVM <- svm(corona_result~.,data = train)
 
-SVM_tahminleri <- predict(unique_SVM, test[,1:8])
-(SVM_tablom <- table(SVM_tahminleri, test[[9]], dnn = c("Tahmini Siniflar", "Gercek Siniflar")))
-
-matSVM_unique<-confusionMatrix(data = SVM_tahminleri, reference = test[[9]], mode = "everything" )
-matSVM_unique
+table(svm_predictions, test[[9]], dnn = c("Tahmini Siniflar", "Gercek Siniflar"))
+confusionMatrix(data = svm_predictions, reference = test[[9]], mode = "everything" )
