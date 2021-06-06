@@ -1,14 +1,34 @@
-system.time({
+# system.time({
   
-library(doParallel)
-cl <- makeCluster(detectCores())
-registerDoParallel(cl)
+# library(doParallel)
+# cl <- makeCluster(detectCores())
+# registerDoParallel(cl)
 
-train = read.csv(file = "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_egitim_dengesiz-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-test = read.csv(file = "./veri-on-isleme/eksikleri-silme/eksikleri_silindi_test-emrah.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# train = read.csv(file = "./veri-on-isleme/genel_temizlik_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/genel_temizlik_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+
+# train = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+
+# train = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/dengesiz_veri_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/dengesiz_veri_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+
+# train = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/unique_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/unique_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+
+# train = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+
+train = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+test = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+
+# train = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+
 train$X = NULL
 test$X = NULL
-dataClean = cleanedDataFile
+
+# dataClean = cleanedDataFile
 
 # library(googledrive)
 # library(dplyr)
@@ -55,26 +75,26 @@ print(table(test$corona_result))
 print(table(train$corona_result))
 
 
-copyDataForCorrelation = rbind(train, test)
-
-copyDataForCorrelation$cough = as.numeric(copyDataForCorrelation$cough)
-copyDataForCorrelation$fever = as.numeric(copyDataForCorrelation$fever)
-copyDataForCorrelation$shortness_of_breath = as.numeric(copyDataForCorrelation$shortness_of_breath)
-copyDataForCorrelation$age_60_and_above = as.numeric(copyDataForCorrelation$age_60_and_above)
-copyDataForCorrelation$gender = as.numeric(copyDataForCorrelation$gender)
-copyDataForCorrelation$sore_throat = as.numeric(copyDataForCorrelation$sore_throat)
-copyDataForCorrelation$head_ache = as.numeric(copyDataForCorrelation$head_ache)
-copyDataForCorrelation$test_indication = as.numeric(copyDataForCorrelation$test_indication)
-copyDataForCorrelation$corona_result = NULL
-
-
-correlationMatrix = cor(copyDataForCorrelation)
-correlationMatrix
-#install.packages("corrplot")
-library(corrplot)
-#korelansyon matrisi gorsellestirildi.
-corrplot(correlationMatrix)
-###korelasyon bolumu bitisi
+# copyDataForCorrelation = rbind(train, test)
+# 
+# copyDataForCorrelation$cough = as.numeric(copyDataForCorrelation$cough)
+# copyDataForCorrelation$fever = as.numeric(copyDataForCorrelation$fever)
+# copyDataForCorrelation$shortness_of_breath = as.numeric(copyDataForCorrelation$shortness_of_breath)
+# copyDataForCorrelation$age_60_and_above = as.numeric(copyDataForCorrelation$age_60_and_above)
+# copyDataForCorrelation$gender = as.numeric(copyDataForCorrelation$gender)
+# copyDataForCorrelation$sore_throat = as.numeric(copyDataForCorrelation$sore_throat)
+# copyDataForCorrelation$head_ache = as.numeric(copyDataForCorrelation$head_ache)
+# copyDataForCorrelation$test_indication = as.numeric(copyDataForCorrelation$test_indication)
+# copyDataForCorrelation$corona_result = NULL
+# 
+# 
+# correlationMatrix = cor(copyDataForCorrelation)
+# correlationMatrix
+# #install.packages("corrplot")
+# library(corrplot)
+# #korelansyon matrisi gorsellestirildi.
+# corrplot(correlationMatrix)
+# ###korelasyon bolumu bitisi
 
 
 library(e1071)
@@ -92,7 +112,12 @@ CrossTable(testPred, test$corona_result, prop.chisq = FALSE, chisq = FALSE,
 
 confusionMatrix(data = testPred, reference = test$corona_result, mode = "everything", positive = "positive")
 
+library(e1071)
+#install.packages("ROSE")
+library(ROSE) 
+RF_RocAll <- roc.curve(test[,9],testPred,plotit=TRUE,main="RF ROC-Naive Bayes Silinmiş Dengeli", col= "red")
+print(RF_RocAll)
 
-
-stopCluster(cl)
-})[[3]]
+# 
+# stopCluster(cl)
+# })[[3]]
