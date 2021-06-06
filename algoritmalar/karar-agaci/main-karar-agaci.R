@@ -46,5 +46,5 @@ confusionMatrix(data = C45_predictions, reference = test$corona_result, dnn =
 library(e1071)
 install.packages("ROSE")
 library(ROSE) 
-RF_RocAll <- roc.curve(test[,9],C45_predictions,plotit=TRUE,main="RF ROC - Sampling Olmadan", col= "red")
+RF_RocAll <- roc.curve(test[,9],C45_predictions,plotit=TRUE,main="RF ROC-Karar Ağacı Doldurulmuş Random Dengeleme", col= "red")
 print(RF_RocAll)
