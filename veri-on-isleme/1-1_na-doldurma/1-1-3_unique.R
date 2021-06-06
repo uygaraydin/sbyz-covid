@@ -1,4 +1,4 @@
-cleanedDataFile = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/logreg_ile_doldurulmus.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+cleanedDataFile = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/doldurulmus_tam_tekrarlarla.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 summary(cleanedDataFile)
 cleanedDataFile<-cleanedDataFile[,-1]
 
@@ -6,7 +6,7 @@ uni_data <- cleanedDataFile[!duplicated(cleanedDataFile),]
 summary(uni_data)
 
 # nrow(uni_data[duplicated(uni_data)==TRUE,]) 
-
+library(caret)
 set.seed(10) 
 
 trainIndisleri <- createDataPartition(y = uni_data$corona_result, p = .70, list = FALSE)  
