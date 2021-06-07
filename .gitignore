@@ -4,3 +4,5 @@
 .Ruserdata
 *.csv
 *.DS_Store
+*.icloud 
+*.csv.icloud

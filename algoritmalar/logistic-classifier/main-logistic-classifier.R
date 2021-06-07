@@ -1,5 +1,5 @@
-train = read.csv(file = "./veri-on-isleme/genel_temizlik_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-test = read.csv(file = "./veri-on-isleme/genel_temizlik_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# train = read.csv(file = "./veri-on-isleme/genel_temizlik_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/genel_temizlik_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
 # train = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 # test = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
@@ -10,9 +10,11 @@ test = read.csv(file = "./veri-on-isleme/genel_temizlik_test.csv", header = T, s
 # train = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/unique_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 # test = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/unique_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
-# train = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-# test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+train = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
+summary(train)
+summary(test)
 # train = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 # test = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
@@ -22,9 +24,39 @@ test = read.csv(file = "./veri-on-isleme/genel_temizlik_test.csv", header = T, s
 train$X = NULL
 test$X = NULL
 
+# train[train$corona_result=="negative", "corona_result"] < - 0
+# train[train$corona_result=="positive", "corona_result"] < - 1
+# 
+# test[test$corona_result=="negative", "corona_result"] < - 0
+# test[test$corona_result=="positive", "corona_result"] < - 1
 
-#install.packages("class")
-library(class)
-summary(train)
+install.packages("plyr")
+library(plyr)
 
-model=knn(train = train, test = test, labels = c("negative", "positive"), k=10)
+train$corona_result <- revalue(train$corona_result, c("negative" = "0", "positive" = "1") )
+test$corona_result <- revalue(test$corona_result, c("negative" = "0", "positive" = "1") )
+
+install.packages("e1071")
+library(e1071)  
+
+set.seed(1)
+normal_classifier = glm(formula = corona_result ~ ., family = binomial, data = train)
+normal_probability_predict = predict(normal_classifier, type = 'response', newdata = test[-9])
+Logcl_tahminiSiniflar = ifelse(normal_probability_predict>0.5, 1, 0)
+
+library(caret)
+confusionMatrix(table(test[, 9], Logcl_tahminiSiniflar),mode = "everything", positive = "1")
+
+# Roc curve
+install.packages("ROSE")
+library(ROSE) 
+Logcl_rocAll <- roc.curve(test[,9], Logcl_tahminiSiniflar, plotit = TRUE,main="LC ROC - Sampling Olmadan")
+print(Logcl_rocAll)
+
+install.packages("pROC")
+library(pROC)
+Logcl_rocAll=roc(test[,9]~normal_probability_predict)
+Logcl_rocAll_tosave <-as.list(Logcl_rocAll)
+
+
+
