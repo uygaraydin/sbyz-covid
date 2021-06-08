@@ -88,6 +88,12 @@ test$sore_throat = as.numeric(test$sore_throat)
 test$shortness_of_breath = as.numeric(test$shortness_of_breath)
 test$head_ache = as.numeric(test$head_ache)
 
+#sigmoid function
+sigmoid = function(x) {
+  1 / (1 + exp(-x))
+}
+
+
 
 # colnames(m)
 library(neuralnet)
@@ -95,9 +101,13 @@ library(neuralnet)
 
 nn = NULL
 nn <- neuralnet(corona_result~cough+fever+sore_throat+shortness_of_breath+head_ache+age_60_and_above+gender+test_indication,
-                data=train, hidden=3, act.fct = "logistic",
-                linear.output = F,
-                stepmax = 1e6
+                linear.output = FALSE,
+                hidden = 3,
+                err.fct = "ce",
+                learningrate = 0.01,
+                algorithm = "backprop",
+                act.fct = sigmoid,
+                stepmax=1e6
 )
 
 plot(nn)
@@ -108,9 +118,9 @@ summary(Predict)
 
 pred <- ifelse(Predict$net.result>0.5, 1, 0)
 pred
-
-results <- data.frame(actual = test$corona_result, prediction = pred)
-results
+# 
+# results <- data.frame(actual = test$corona_result, prediction = pred)
+# results
 
 library(caret)
 t <- table(pred,test$corona_result)  
@@ -129,4 +139,9 @@ confusionMatrix(t, positive = "1")
 
 library(caret) 
 confusionMatrix(table(Predict, test$corona_result),mode="everything",positive ="positive")
+
+library(pROC)
+Logcl_rocAll=roc(test[,9]~Predict)
+print(Logcl_rocAll) #AUC
+plot(Logcl_rocAll,main="Dengele silinmis") 
 
