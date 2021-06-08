@@ -33,6 +33,7 @@ test$test_indication <-as.character(test$test_indication)
 train[train$test_indication=="Contact with confirmed", "test_indication"] <-"Contact_with_confirmed"
 test[test$test_indication=="Contact with confirmed", "test_indication"] <-"Contact_with_confirmed"
 
+
 # 
 # train$age_60_and_above <-  ifelse(train$age_60_and_above == "Yes",1,-1)
 # train$gender <-  ifelse(train$gender == "female",1,-1)
@@ -68,6 +69,7 @@ test[test$test_indication=="Contact with confirmed", "test_indication"] <-"Conta
 
 
 
+
 summary(train)
 summary(test)
 
@@ -83,6 +85,7 @@ test_model <- model.matrix(
   data = test
 )
 colnames(train_model)
+
 # 
 # train$positive = ifelse(train$corona_result=="positive", 1, 0)
 # train$negative <- ifelse(train$corona_result=="negative", 1, 0)
