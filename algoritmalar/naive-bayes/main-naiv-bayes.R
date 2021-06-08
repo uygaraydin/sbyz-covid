@@ -115,7 +115,7 @@ confusionMatrix(data = testPred, reference = test$corona_result, mode = "everyth
 library(e1071)
 #install.packages("ROSE")
 library(ROSE) 
-RF_RocAll <- roc.curve(test[,9],testPred,plotit=TRUE,main="RF ROC-Naive Bayes Silinmiş Dengeli", col= "red")
+RF_RocAll <- roc.curve(test[,9],testPred,plotit=TRUE,main="RF ROC-Naive Bayes Silinmiş Dengesiz", col= "red")
 print(RF_RocAll)
 
 # 

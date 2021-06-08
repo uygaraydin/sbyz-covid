@@ -10,11 +10,11 @@
 # train = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/unique_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 # test = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/unique_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
-train = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# train = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
-# train = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-# test = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+train = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+test = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
 # train = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 # test = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
@@ -32,12 +32,12 @@ library(doSNOW)
 library(foreach)
 library(caret)
 
-numOfCores <- detectCores() - 6
+numOfCores <- detectCores() - 2
 
 set.seed(1) 
 # samp = sample(nrow(train), 290000)
 # trainSamp = train[-samp, ]
-system.time(svmModel = parallelSVM(corona_result~.,data = train, coresNumber = numOfCores))
+svmModel = parallelSVM(corona_result~.,data = train, coresNumber = numOfCores)
 svm_predictions = predict(svmModel, test)
 
 
@@ -61,4 +61,10 @@ svm_predictions = predict(svmModel, test)
 
 
 table(svm_predictions, test[[9]], dnn = c("Tahmini Siniflar", "Gercek Siniflar"))
-confusionMatrix(data = svm_predictions, reference = test[[9]], mode = "everything" )
+confusionMatrix(data = svm_predictions, reference = test[[9]], mode = "everything", positive = "positive")
+
+library(e1071)
+#install.packages("ROSE")
+library(ROSE) 
+RF_RocAll <- roc.curve(test[,9],svm_predictions,plotit=TRUE,main="RF ROC-Destek Vektör Makineleri Silinmiş Dengesiz", col= "pink")
+print(RF_RocAll)
