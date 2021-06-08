@@ -95,9 +95,9 @@ library(neuralnet)
 
 nn = NULL
 nn <- neuralnet(corona_result~cough+fever+sore_throat+shortness_of_breath+head_ache+age_60_and_above+gender+test_indication,
-                       data=train, hidden=3, act.fct = "logistic",
-                       linear.output = F,
-                       stepmax = 1e6
+                data=train, hidden=3, act.fct = "logistic",
+                linear.output = F,
+                stepmax = 1e6
 )
 
 plot(nn)
