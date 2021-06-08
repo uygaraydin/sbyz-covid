@@ -101,7 +101,11 @@ library(neuralnet)
 
 nn = NULL
 nn <- neuralnet(corona_result~cough+fever+sore_throat+shortness_of_breath+head_ache+age_60_and_above+gender+test_indication,
+<<<<<<< HEAD
                 data=train,
+=======
+                linear.output = FALSE,
+>>>>>>> 297cd7079b3b69f3ea6131dcd8e10bc4fb5796a3
                 hidden = 3,
                 err.fct = "ce",
                 learningrate = 0.01,
