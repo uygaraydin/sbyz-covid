@@ -1,4 +1,4 @@
-cleanedDataFile = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/doldurulmus_tam_tekrarlarla.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+cleanedDataFile = read.csv(file = "./veri-on-isleme/1-1_na-doldurma/logreg_ile_doldurulmus.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 summary(cleanedDataFile)
 cleanedDataFile<-cleanedDataFile[,-1]
 
