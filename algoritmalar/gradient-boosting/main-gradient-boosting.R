@@ -1,3 +1,19 @@
+
+# train = read.csv(file = "./Veri -on-isleme -2/1_na_silme/1-silinmis_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./Veri -on-isleme -2/1_na_silme/1-silinmis_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# 
+# train = read.csv(file = "./Veri -on-isleme -2/2_na_doldurma/2_1_tekrar_silme/doldurulmus_1_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./Veri -on-isleme -2/2_na_doldurma/2_1_tekrar_silme/doldurulmus_1_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# 
+# train = read.csv(file = "./Veri -on-isleme -2/2_na_doldurma/2_2_tekrar_testten_silme/doldurulmus_2_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./Veri -on-isleme -2/2_na_doldurma/2_2_tekrar_testten_silme/doldurulmus_2_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# 
+
+#############################################################################################################################################################################
+
+
+
+
 # install.packages("tidyverse")
 # install.packages("xgboost")
 library(tidyverse)
@@ -20,13 +36,13 @@ library(xgboost)
 # train2$X = NULL
 
 # train = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-2_na-silme/random_dengeleme_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
 # train = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 # test = read.csv(file = "./veri-on-isleme/1-2_na-silme/dengesiz_veri_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
-train = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
-test = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# train = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_egitim.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
+# test = read.csv(file = "./veri-on-isleme/1-2_na-silme/unique_test.csv", header = T, sep = ",", dec = ".", stringsAsFactors = T)
 
 train2=rbind(train, test)
 train2$X = NULL
@@ -47,14 +63,14 @@ cl <- makePSOCKcluster(no_cores)
 
 registerDoParallel(cl)
 
-  # Fit the model on the training set
-  model <- train(
-    corona_result ~., data = train2, method = "xgbTree",
-    trControl = trainControl("cv", number = 10, allowParallel = TRUE)
-  )
-  # Best tuning parameter
-  model$bestTune
-  
+# Fit the model on the training set
+model <- train(
+  corona_result ~., data = train2, method = "xgbTree",
+  trControl = trainControl("cv", number = 10, allowParallel = TRUE)
+)
+# Best tuning parameter
+model$bestTune
+
 stopCluster(cl)
 registerDoSEQ()
 
