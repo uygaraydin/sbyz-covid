@@ -82,7 +82,7 @@ test$sore_throat = as.numeric(test$sore_throat)
 test$shortness_of_breath = as.numeric(test$shortness_of_breath)
 test$head_ache = as.numeric(test$head_ache)
 
-
+summary(train)
 # colnames(m)
 library(neuralnet)
 
@@ -91,8 +91,10 @@ nn = NULL
 set.seed(10)
 nn <- neuralnet(corona_result~cough+fever+sore_throat+shortness_of_breath+head_ache+age_60_and_above+gender+test_indication,
                 data=train,
-                linear.output = FALSE,
-                hidden = 3,
+                algorithm = "backprop",
+                # learningrate=0.001,
+                # linear.output = FALSE,
+                hidden = 5,
                 act.fct = "logistic",
                 stepmax=1e6
 )
@@ -106,13 +108,13 @@ summary(Predict)
 
 pred <- ifelse(Predict$net.result>0.5, 1, 0)
 
-#library(caret)
+library(caret)
 t <- table(pred,test$corona_result)  
 confusionMatrix(t, mode="everything", positive = "1")
 table(test$corona_result)
 table(pred)
 
-#library(pROC)
+library(pROC)
 Logcl_rocAll=roc(test$corona_result~pred)
 print(Logcl_rocAll) #AUC
 plot(Logcl_rocAll) 
